@@ -3,7 +3,7 @@ name: Build FFX HP Restore
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch:  # pozwala uruchomic recznie przyciskiem
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,15 +18,15 @@ jobs:
         with:
           arch: x86
 
-      - name: Skonfiguruj CMake
-        run: cmake -G "Visual Studio 17 2022" -A Win32 -B build .
+      - name: Skonfiguruj CMake (Ninja + MSVC x86)
+        run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -B build ffx-hp-restore
 
       - name: Kompiluj
-        run: cmake --build build --config Release
+        run: cmake --build build
 
       - name: Uploaduj gotowy DLL
         uses: actions/upload-artifact@v4
         with:
           name: ffx_hp_restore
-          path: build/Release/ffx_hp_restore.dll
+          path: build/ffx_hp_restore.dll
           if-no-files-found: error
